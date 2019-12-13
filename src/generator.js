@@ -61,6 +61,7 @@ const getClosestPoint = entry => {
 export const getNextWord = input => getClosestPoint(createStringArray(input))[k - 1];
 
 // TODO: take for example source-tree as argument, or maybe something more abstract like category
+// TODO: Make another function with possibility to use a starting sentence
 export default (numberWords = 50) => {
     let output = "";
     for (let i = 0; i < numberWords; i++) {
