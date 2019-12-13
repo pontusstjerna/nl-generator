@@ -1,6 +1,7 @@
 
 // every word has k-1 previous words, even if they are undefined
 const k = 5;
+const deterministic = false;
 let tree = [];
 
 const createStringArray = input => {
@@ -12,7 +13,7 @@ const createStringArray = input => {
     return entry;
 };
 
-const createStringMatrix = input => {
+const createStringTree = input => {
     const split = input.split(" ");
     return split.map((word, i) => {
         let entry = [];
@@ -24,7 +25,7 @@ const createStringMatrix = input => {
 };
 
 const learn = inputStrings => {
-    tree = inputStrings.flatMap(input => createStringMatrix(input));
+    tree = inputStrings.flatMap(input => createStringTree(input));
 };
 
 const getMatch = (entryA, entryB) => {
@@ -39,14 +40,21 @@ const getMatch = (entryA, entryB) => {
 };
 
 const getClosestPoint = entry => {
-    let closest = tree[0];
+    let closest = [tree[0]];
+    let bestScore = getMatch(entry, closest);
     tree.forEach(element => {
-       if (getMatch(entry, element) > getMatch(entry, closest)) {
-           closest = element;
-       }
+        const score = getMatch(entry, element);
+        if (score > bestScore) {
+            closest = [element];
+            bestScore = score;
+
+        // we want words of equal probability to be randomized to not be deterministic (can be turned off)
+        } else if (score === bestScore) {
+            closest.push(element);
+        }
     });
 
-    return closest;
+    return closest[deterministic ? 0 : Math.floor(Math.random() * closest.length)];
 };
 
 const getNextWord = input => getClosestPoint(createStringArray(input))[k - 1];
