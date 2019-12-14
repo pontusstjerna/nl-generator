@@ -6,7 +6,10 @@ import { config } from "dotenv";
 config();
 
 const setup = () => {
-    if (hasLearned) return Promise.resolve();
+    if (hasLearned) {
+        console.log("Model has already learned, will not learn again!");
+        return Promise.resolve();
+    }
 
     // TODO: Allow multiple input files?
     const filePath = process.env.INPUT_FILE_PATH;
