@@ -1,4 +1,3 @@
-
 // every word has k-1 previous words, even if they are undefined
 let k = 5;
 const deterministic = false;
@@ -55,19 +54,21 @@ const getClosestPoint = entry => {
         }
     });
 
-    return closest[deterministic ? 0 : Math.floor(Math.random() * closest.length)];
+    return closest[
+        deterministic ? 0 : Math.floor(Math.random() * closest.length)
+    ];
 };
 
-export const getNextWord = input => getClosestPoint(createStringArray(input))[k - 1];
+export const getNextWord = input =>
+    getClosestPoint(createStringArray(input))[k - 1];
 
 // TODO: take for example source-tree as argument, or maybe something more abstract like category
 // TODO: Make another function with possibility to use a starting sentence
-export default (numberWords = 50) => {
-    let output = "";
+export default (numberWords = 50, initiator = "") => {
+    let output = initiator;
     for (let i = 0; i < numberWords; i++) {
         output = output + " " + getNextWord(output);
     }
 
     return output;
 };
-

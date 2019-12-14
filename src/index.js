@@ -1,13 +1,17 @@
 import generate, { getNextWord, createStringArray, learn } from "./generator";
-import input from "../input";
 
-//learn(lotsOfText.split(". "), 3);
-learn(input.flatMap(i => i.split(". ")), 10);
+const fs = require("fs"),
+  path = require("path");
 
-/*const example1 = "hej där";
-const example2 = "hej";
+const data = fs
+  .readFileSync(path.join(__dirname, "../ml-data/blog-posts.txt"))
+  .toString("utf8");
+learn(data.split("\n").flatMap(i => i.split(". ")), 10);
 
-console.log(getNextWord(example1));
-console.log(getNextWord(example2));*/
+const printText = (letterCount, initiator = "") => {
+  console.log("--- " + initiator + " ---");
+  console.log(generate(letterCount, initiator));
+};
 
-console.log(generate(200));
+printText(200, "Ekonomi");
+printText(200, "Kärlek");
