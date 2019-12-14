@@ -1,11 +1,16 @@
-import generate, { getNextWord, createStringArray, learn } from "./generator";
+import generate, { learn } from "./generator";
+import fs from "fs";
+import path from "path";
+import { config } from "dotenv";
 
-const fs = require("fs"),
-  path = require("path");
+config();
 
+// TODO: Allow multiple input files?
+const filePath = process.env.INPUT_FILE_PATH;
 const data = fs
-  .readFileSync(path.join(__dirname, "../ml-data/blog-posts.txt"))
+  .readFileSync(path.join(process.cwd(), filePath ? filePath : "."))
   .toString("utf8");
+
 learn(data.split("\n").flatMap(i => i.split(". ")), 10);
 
 const printText = (letterCount, initiator = "") => {
