@@ -59,7 +59,7 @@ const getClosestPoint = entry => {
     let closest = [tree[0]];
     let bestScore = getMatchConstant(entry, closest);
     tree.forEach(element => {
-        const score = getMatchConstant(entry, element);
+        const score = getMatchLinear(entry, element);
         if (score > bestScore) {
             closest = [element];
             bestScore = score;
