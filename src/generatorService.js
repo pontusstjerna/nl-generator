@@ -1,9 +1,6 @@
 import generate, { learn, hasLearned } from "./generator";
 import fs from "fs";
 import path from "path";
-import { config } from "dotenv";
-
-config();
 
 const setup = () => {
     if (hasLearned) {
