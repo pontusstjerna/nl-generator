@@ -32,7 +32,8 @@ export const learn = (inputStrings, dimensions) => {
     console.log(`Model has learned! KD-tree has ${tree.length} entries and uses ${k} dimensions.`);
 };
 
-const getMatch = (entryA, entryB) => {
+// All matching words rewards the same score
+const getMatchConstant = (entryA, entryB) => {
     let sum = 0;
     for (let i = 0; i < k - 1; i++) {
         if (entryA[i] === entryB[i]) {
@@ -43,11 +44,22 @@ const getMatch = (entryA, entryB) => {
     return sum;
 };
 
+// The matching word is rewarded higher score if it is closer to the last
+const getMatchLinear = (entryA, entryB) => {
+    let sum = 0;
+    for (let i = 0; i < k - 1; i++) {
+        if (entryA[i] === entryB[i]) {
+            sum += (i + 1);
+        }
+    }
+    return sum;
+}
+
 const getClosestPoint = entry => {
     let closest = [tree[0]];
-    let bestScore = getMatch(entry, closest);
+    let bestScore = getMatchConstant(entry, closest);
     tree.forEach(element => {
-        const score = getMatch(entry, element);
+        const score = getMatchConstant(entry, element);
         if (score > bestScore) {
             closest = [element];
             bestScore = score;
