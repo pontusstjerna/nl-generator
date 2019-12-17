@@ -19,7 +19,7 @@ const setup = () => {
             .readFileSync(path.join(process.cwd(), filePath ? filePath : "."))
             .toString("utf8");
 
-        learn(data.split("\n").flatMap(i => i.split(". ")), 50);
+        learn(data.split("\n"), 100);
         resolve();
     });
 };
