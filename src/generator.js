@@ -26,7 +26,7 @@ const createStringTree = (input, dimensions = 5) => {
     });
 };
 
-export const learn = (inputStrings, dimensions) => {
+export const learn = (inputStrings, dimensions = 50) => {
     console.log("Model learning....");
     tree = inputStrings.flatMap(input => createStringTree(input, dimensions));
     console.log(`Model has learned! KD-tree has ${tree.length} entries and uses ${k} dimensions.`);
