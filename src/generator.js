@@ -12,7 +12,7 @@ export const createStringArray = input => {
     return entry;
 };
 
-export const hasLearned = tree.length !== 0;
+export const hasLearned = tree.length > 0;
 
 const createStringTree = (input, dimensions = 5) => {
     k = dimensions;

@@ -1,6 +1,7 @@
 import generate, { learn, hasLearned } from "./generator";
 import fs from "fs";
 import path from "path";
+import {capitalizeSentences, removeLastSentence, splitJoin} from "./stringUtils";
 
 const setup = () => {
     if (hasLearned) {
@@ -21,11 +22,20 @@ const setup = () => {
     });
 };
 
+const postProcess = input => {
+    input = capitalizeSentences(input);
+    input = removeLastSentence(input);
+    input = input.trim();
+    return input;
+};
+
 export const printText = (wordCount, initiator = "") =>
     setup().then(() => {
         console.log("--- " + (initiator ? initiator : "<No initiator>") + " ---");
         console.log(generate(wordCount, initiator));
     });
 
-export default (wordCount = 50, initiator = "") => setup()
-    .then(() => generate(wordCount, initiator));
+export default (wordCount = 50, initiator = "") =>
+    setup()
+    .then(() => generate(wordCount, initiator))
+    .then(postProcess);
