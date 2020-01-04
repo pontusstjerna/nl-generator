@@ -1,3 +1,5 @@
+import "core-js/features/array/flat-map";
+
 // every word has k-1 previous words, even if they are undefined
 let k = 5;
 const deterministic = false;
