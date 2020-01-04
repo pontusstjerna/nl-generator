@@ -4,7 +4,7 @@ import path from "path";
 import {capitalizeSentences, removeLastSentence, splitJoin} from "./stringUtils";
 
 const setup = () => {
-    if (hasLearned) {
+    if (hasLearned()) {
         console.log("Model has already learned, will not learn again!");
         return Promise.resolve();
     }
