@@ -3,3 +3,4 @@ node_modules
 ml-data
 .env
 dist
+data
