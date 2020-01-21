@@ -1,5 +1,6 @@
 import express from "express";
 import basicAuth from "express-basic-auth";
+import cors from "cors"
 import generate, { printText } from "./generatorService";
 import { config } from "dotenv";
 
@@ -8,11 +9,16 @@ config();
 const port = process.env.PORT ? process.env.PORT : 3000;
 const app = express();
 
-app.use(basicAuth({
-    users: {
-        [process.env.API_USER]: process.env.API_PASSWORD,
-    }
-}));
+// Enable CORS support to allow calling on localhost 
+app.use(cors())
+
+app.use(
+    basicAuth({
+        users: {
+            [process.env.API_USER]: process.env.API_PASSWORD
+        }
+    })
+);
 
 app.get("/", (req, res) => {
     const { initiator, wordCount } = req.query;
