@@ -16,6 +16,7 @@
     "@babel/node": "^7.7.7",
     "@babel/preset-env": "^7.7.7",
     "cors": "^2.8.5",
+    "date-fns": "^2.9.0",
     "dotenv": "^8.2.0",
     "nodemon": "^2.0.2"
   },

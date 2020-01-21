@@ -1,3 +1,6 @@
+import { format } from "date-fns";
+import { sv } from "date-fns/locale";
+
 const sentenceSeparators = [".", "!", "?"];
 
 const capitalizeFirst = input => input.charAt(0).toUpperCase() + input.substring(1);
@@ -20,3 +23,5 @@ export const removeLastSentence = input => {
 
     return input.substring(0, lastSentenceEndIndex + 1);
 };
+
+export const replaceWeekdays = input => input.replace("[veckodag]", format(new Date(), "cccc", { locale: sv }));

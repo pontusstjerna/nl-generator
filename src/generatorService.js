@@ -1,7 +1,7 @@
 import generate, { learn, hasLearned } from "./generator";
 import fs from "fs";
 import path from "path";
-import {capitalizeSentences, removeLastSentence, splitJoin} from "./stringUtils";
+import {capitalizeSentences, removeLastSentence, replaceWeekdays} from "./stringUtils";
 
 const setup = () => {
     if (hasLearned()) {
@@ -23,6 +23,7 @@ const setup = () => {
 };
 
 const postProcess = input => {
+    input = replaceWeekdays(input);
     input = capitalizeSentences(input);
     input = removeLastSentence(input);
     input = input.trim();
