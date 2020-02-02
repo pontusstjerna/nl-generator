@@ -5,7 +5,7 @@ let k = 5;
 const deterministic = false;
 let tree = [];
 
-export const createStringArray = input => {
+export const createStringEntry = input => {
     const split = input.split(" ");
     let entry = [];
     for (let j = split.length - k + 1; j <= split.length; j++) {
@@ -46,21 +46,25 @@ const getMatchConstant = (entryA, entryB) => {
     return sum;
 };
 
+// Matches two entries and returns the matching score
 // The matching word is rewarded higher score if it is closer to the last
 const getMatchLinear = (entryA, entryB) => {
     let sum = 0;
-    for (let i = 0; i < k - 1; i++) {
+    for (let i = 0; i < entryA.length - 1; i++) {
         if (entryA[i] === entryB[i]) {
             sum += (i + 1);
         }
     }
     return sum;
-}
+};
 
 const getClosestPoint = entry => {
     let closest = [tree[0]];
     let bestScore = getMatchConstant(entry, closest);
-    tree.forEach(element => {
+
+    for (let i = 0; i < tree.length; i++) {
+        const element = tree[i];
+
         const score = getMatchLinear(entry, element);
         if (score > bestScore) {
             closest = [element];
@@ -70,7 +74,7 @@ const getClosestPoint = entry => {
         } else if (score === bestScore) {
             closest.push(element);
         }
-    });
+    }
 
     return closest[
         deterministic ? 0 : Math.floor(Math.random() * closest.length)
@@ -78,9 +82,8 @@ const getClosestPoint = entry => {
 };
 
 export const getNextWord = input =>
-    getClosestPoint(createStringArray(input))[k - 1];
+    getClosestPoint(createStringEntry(input))[k - 1];
 
-// TODO: take for example source-tree as argument, or maybe something more abstract like category
 export default (numberWords = 50, initiator = "") => {
     let output = initiator;
     for (let i = 0; i < numberWords; i++) {

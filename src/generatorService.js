@@ -36,7 +36,15 @@ export const printText = (wordCount, initiator = "") =>
         console.log(generate(wordCount, initiator));
     });
 
-export default (wordCount = 50, initiator = "") =>
-    setup()
+
+export default (wordCount = 50, initiator = "") => {
+    const timeBefore = new Date().getTime();
+    return setup()
     .then(() => generate(wordCount, initiator))
-    .then(postProcess);
+    .then(postProcess)
+    .then(result => {
+        const timeAfter = new Date().getTime();
+        console.log("Time for request was " + (timeAfter - timeBefore) + "ms.");
+        return result;
+    });
+}
