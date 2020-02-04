@@ -17,7 +17,7 @@ const setup = () => {
             .readFileSync(path.join(process.cwd(), filePath ? filePath : "."))
             .toString("utf8");
 
-        learn(data.replace(/"/g, "").split("\n"), process.env.DIMENSIONS);
+        learn(data.replace(/"/g, ""), process.env.DIMENSIONS);
         resolve();
     });
 };

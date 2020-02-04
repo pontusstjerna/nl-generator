@@ -8,81 +8,94 @@ let tree = [];
 export const createStringEntry = input => {
     const split = input.split(" ");
     let entry = [];
-    for (let j = split.length - k + 1; j <= split.length; j++) {
+    for (let j = split.length - k; j < split.length; j++) {
         entry.push(split[j] ? split[j] : undefined);
     }
+
     return entry;
 };
 
 export const hasLearned = () => tree.length > 0;
 
-const createStringTree = (input, dimensions = 5) => {
-    k = dimensions;
-    const split = input.split(" ");
-    return split.map((word, i) => {
-        let entry = [];
-        for (let j = i - k + 1; j <= i; j++) {
-            entry.push(split[j]);
-        }
-        return entry;
-    });
-};
-
-export const learn = (inputStrings, dimensions = 50) => {
+export const learn = (input, dimensions = 50) => {
     console.log("Model learning....");
-    tree = inputStrings.flatMap(input => createStringTree(input, dimensions));
-    console.log(`Model has learned! KD-tree has ${tree.length} entries and uses ${k} dimensions.`);
+    k = dimensions;
+    tree = input.split(" ");
+    console.log(`Model has learned! KD-tree has ${tree.length} entries and using ${k} dimensions.`);
 };
 
-// All matching words rewards the same score
-const getMatchConstant = (entryA, entryB) => {
-    let sum = 0;
-    for (let i = 0; i < k - 1; i++) {
-        if (entryA[i] === entryB[i]) {
-            sum++;
-        }
+const getMatchConstant = (entry, searchIndex) => {
+    const lastWord = entry[entry.length - 1];
+    const wordIndex = tree.indexOf(lastWord, searchIndex);
+    if (wordIndex === -1) {
+        return { index: -1, score: 0 };
     }
 
-    return sum;
+    let sum = 0;
+    for (let i = 0; i < entry.length - 1; i++) {
+        if (entry[i] === tree[wordIndex - entry.length + i]) {
+            sum ++;
+        }
+    }
+    return { index: wordIndex, score: sum };
 };
 
 // Matches two entries and returns the matching score
 // The matching word is rewarded higher score if it is closer to the last
-const getMatchLinear = (entryA, entryB) => {
+const getMatchLinear = (entry, searchIndex) => {
+    const lastWord = entry[entry.length - 1];
+    const wordIndex = tree.indexOf(lastWord, searchIndex);
+    if (wordIndex === -1) {
+        return { index: -1, score: 0 };
+    }
+
     let sum = 0;
-    for (let i = 0; i < entryA.length - 1; i++) {
-        if (entryA[i] === entryB[i]) {
+    for (let i = 0; i < entry.length - 1; i++) {
+        if (entry[i] === tree[wordIndex - entry.length + i]) {
             sum += (i + 1);
         }
     }
-    return sum;
+    return { index: wordIndex, score: sum };
 };
 
-const getClosestPoint = entry => {
-    let closest = [tree[0]];
-    let bestScore = getMatchConstant(entry, closest);
-
-    for (let i = 0; i < tree.length; i++) {
-        const element = tree[i];
-
-        const score = getMatchLinear(entry, element);
-        if (score > bestScore) {
-            closest = [element];
-            bestScore = score;
-
-            // we want words of equal probability to be randomized to not be deterministic (can be turned off)
-        } else if (score === bestScore) {
-            closest.push(element);
-        }
+// Matches two entries and returns the matching score
+// The matching word is rewarded higher score if it is closer to the last
+const getMatchExponential = (entry, searchIndex) => {
+    const lastWord = entry[entry.length - 1];
+    const wordIndex = tree.indexOf(lastWord, searchIndex);
+    if (wordIndex === -1) {
+        return { index: -1, score: 0 };
     }
 
-    return closest[
-        deterministic ? 0 : Math.floor(Math.random() * closest.length)
-    ];
+    let sum = 0;
+    for (let i = 0; i < entry.length - 1; i++) {
+        if (entry[i] === tree[wordIndex - entry.length + i]) {
+            sum += (i * i);
+        }
+    }
+    return { index: wordIndex, score: sum };
+};
+
+const getBestMatchedWordIndex = entry => {
+    let bestResult = { index: Math.floor(Math.random() * tree.length - 1), score: 1 };
+    let index = bestResult.index;
+    while (true) {
+        const result = getMatchLinear(entry, index + 1);
+
+        if (result.index === -1) {
+            //console.log("Best score was: " + result.score);
+            return bestResult.index;
+        }
+        index = result.index;
+
+        if (result.score > bestResult.score) {
+            bestResult = result;
+        }
+    }
 };
 
 export const getNextWord = input =>
-    getClosestPoint(createStringEntry(input))[k - 1];
+    tree[getBestMatchedWordIndex(createStringEntry(input)) + 1];
 
 export default (numberWords = 50, initiator = "") => {
     let output = initiator;
