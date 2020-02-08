@@ -20,7 +20,7 @@ export const hasLearned = () => tree.length > 0;
 export const learn = (input, dimensions = 50) => {
     console.log("Model learning....");
     k = dimensions;
-    tree = input.split(" ");
+    tree = input.split(" ").map(word => word === "undefined" ? undefined : word);
     console.log(`Model has learned! KD-tree has ${tree.length} entries and using ${k} dimensions.`);
 };
 
@@ -45,13 +45,14 @@ const getMatchConstant = (entry, searchIndex) => {
 const getMatchLinear = (entry, searchIndex) => {
     const lastWord = entry[entry.length - 1];
     const wordIndex = tree.indexOf(lastWord, searchIndex);
-    if (wordIndex === -1) {
+    if (wordIndex === -1 ) {
         return { index: -1, score: 0 };
     }
 
     let sum = 0;
     for (let i = 0; i < entry.length - 1; i++) {
-        if (entry[i] === tree[wordIndex - entry.length + i]) {
+        const treeWord = tree[wordIndex - entry.length + i];
+        if (entry[i] === treeWord) {
             sum += (i + 1);
         }
     }
@@ -83,7 +84,6 @@ const getBestMatchedWordIndex = entry => {
         const result = getMatchLinear(entry, index + 1);
 
         if (result.index === -1) {
-            //console.log("Best score was: " + result.score);
             return bestResult.index;
         }
         index = result.index;

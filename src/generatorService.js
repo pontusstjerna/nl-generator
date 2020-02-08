@@ -1,7 +1,7 @@
 import generate, { learn, hasLearned } from "./generator";
 import fs from "fs";
 import path from "path";
-import {capitalizeSentences, removeLastSentence, replaceWeekdays} from "./stringUtils";
+import { capitalizeSentences, removeLastSentence, replaceWeekdays } from "./stringUtils";
 
 const setup = () => {
     if (hasLearned()) {
@@ -17,7 +17,20 @@ const setup = () => {
             .readFileSync(path.join(process.cwd(), filePath ? filePath : "."))
             .toString("utf8");
 
-        learn(data.replace(/"/g, ""), process.env.DIMENSIONS);
+        const dimensions = process.env.DIMENSIONS || 50;
+
+        // To easier find new entries
+        const processedData = data.split("\n\n\n").map(part => {
+                let prePart = "";
+                for (let i = 0; i < dimensions - 1; i++) {
+                    prePart += "undefined ";
+                }
+
+                return prePart + part;
+            }).join("\n\n\n")
+                .replace(/"/g, "");
+
+        learn(processedData, dimensions);
         resolve();
     });
 };
@@ -40,11 +53,11 @@ export const printText = (wordCount, initiator = "") =>
 export default (wordCount = 50, initiator = "") => {
     const timeBefore = new Date().getTime();
     return setup()
-    .then(() => generate(wordCount, initiator))
-    .then(postProcess)
-    .then(result => {
-        const timeAfter = new Date().getTime();
-        console.log("Time for request was " + (timeAfter - timeBefore) + "ms.");
-        return result;
-    });
+        .then(() => generate(wordCount, initiator))
+        .then(postProcess)
+        .then(result => {
+            const timeAfter = new Date().getTime();
+            console.log("Time for request was " + (timeAfter - timeBefore) + "ms.");
+            return result;
+        });
 }
