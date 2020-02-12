@@ -68,6 +68,10 @@ const getMatchExponential = (entry, searchIndex) => {
         return { index: -1, score: 0 };
     }
 
+    if (tree[wordIndex] === undefined) {
+        return { index: wordIndex, score: -1 };
+    }
+
     let sum = 0;
     for (let i = 0; i < entry.length - 1; i++) {
         if (entry[i] === tree[wordIndex - entry.length + i]) {
@@ -94,8 +98,15 @@ const getBestMatchedWordIndex = entry => {
     }
 };
 
-export const getNextWord = input =>
-    tree[getBestMatchedWordIndex(createStringEntry(input)) + 1];
+export const getNextWord = input => {
+    const index = getBestMatchedWordIndex(createStringEntry(input));
+    if (tree[index + 1] === undefined) {
+        let i = index + 1;
+        while (tree[i] === undefined) i++;
+        return tree[i];
+    }
+    return tree[index + 1];
+};
 
 export default (numberWords = 50, initiator = "") => {
     let output = initiator;
