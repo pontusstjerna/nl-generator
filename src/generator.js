@@ -20,7 +20,7 @@ export const hasLearned = () => tree.length > 0;
 export const learn = (input, dimensions = 50) => {
     console.log("Model learning....");
     k = dimensions;
-    tree = input.split(" ").map(word => word === "undefined" ? undefined : word);
+    tree = input.split(" ").map(word => word.includes("undefined") ? undefined : word);
     console.log(`Model has learned! KD-tree has ${tree.length} entries and using ${k} dimensions.`);
 };
 
