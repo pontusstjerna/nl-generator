@@ -30,6 +30,16 @@ app.get("/", (req, res) => {
         });
 });
 
+app.post('/slack', (req, res) => {
+    const wordCount = 100;
+    const initiator = req.body.text;
+    res.set('Content-Type', 'application/json');
+    generate(wordCount, initiator).then(result => res.send(JSON.stringify({
+        "response_type": "in_channel",
+        "text": result
+    })));
+});
+
 //printText(50, "För kräftan krävs det mycket energi");
 //printText(100);
 
