@@ -14,7 +14,7 @@ app.use(cors());
 
 app.post('/slack', (req, res) => {
     const wordCount = 100;
-    const initiator = req.body.text;
+    const initiator = req.body && req.body.text;
     res.set('Content-Type', 'application/json');
     generate(wordCount, initiator).then(result => res.send(JSON.stringify({
         "response_type": "in_channel",
