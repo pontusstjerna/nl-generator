@@ -58,3 +58,6 @@ occurs. The sum of points is the score.
 The example above would reward 5 score, 0 points for `"a" !== undefined`, 
 2 points for `"natural" === "natural"` and 3 points for `"language" === "language"`.  
 
+## Curl examples
+
+`curl --user api_consumer:my_secret -w "\n" http://localhost:3001?wordCount=100`
