@@ -1,7 +1,8 @@
 import "core-js/features/array/flat-map";
+import { search } from "core-js/fn/symbol";
 
 // every word has k-1 previous words, even if they are undefined
-let k = 5;
+let k = 20;
 const deterministic = false;
 let tree = [];
 
@@ -53,14 +54,14 @@ const getMatchLinear = (entry, searchIndex) => {
     for (let i = 0; i < entry.length - 1; i++) {
         const treeWord = tree[wordIndex - entry.length + i];
         if (entry[i] === treeWord) {
-            sum += (i + 1);
+            sum += (8 * i + 1);
         }
     }
     return { index: wordIndex, score: sum };
 };
 
 // Matches two entries and returns the matching score
-// The matching word is rewarded higher score if it is closer to the last
+// The matching word is rewarded exponentially higher score if it is closer to the last
 const getMatchExponential = (entry, searchIndex) => {
     const lastWord = entry[entry.length - 1];
     const wordIndex = tree.indexOf(lastWord, searchIndex);
@@ -81,11 +82,21 @@ const getMatchExponential = (entry, searchIndex) => {
     return { index: wordIndex, score: sum };
 };
 
+const getMatchingFunction = () => {
+    const matchingFunction = process.env.MATCHING_FUNCTION || 'linear';
+    switch(matchingFunction) {
+        case 'linear': return getMatchLinear
+        case 'exponential': return getMatchExponential
+        case 'constant': return getMatchConstant
+    }
+}
+
 const getBestMatchedWordIndex = entry => {
     let bestResult = { index: Math.floor(Math.random() * tree.length - 1), score: 1 };
     let index = bestResult.index;
     while (true) {
-        const result = getMatchLinear(entry, index + 1);
+
+        const result = getMatchingFunction()(entry, index + 1);
 
         if (result.index === -1) {
             return bestResult.index;

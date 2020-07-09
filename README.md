@@ -3,6 +3,9 @@
 The goal of this small project is to generate a reasonable sentence or piece of text based on
 text samples with a certain subject, such as blog posts, chats or horoscopes. 
 
+## .env file
+Checkout example.env and copy to a .env file and enter your own values to customize the output and input.
+
 ## The algorithm
 The algorithm uses a KD-tree inspired approach to generate new words depending on `k-1` 
 previous words. 
