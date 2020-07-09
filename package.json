@@ -11,17 +11,17 @@
   "author": "Pontus Drejer",
   "license": "ISC",
   "devDependencies": {
-    "@babel/cli": "^7.8.3",
-    "@babel/core": "^7.8.3",
-    "@babel/node": "^7.7.7",
-    "@babel/preset-env": "^7.7.7",
+    "@babel/cli": "^7.10.4",
+    "@babel/core": "^7.10.4",
+    "@babel/node": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
     "cors": "^2.8.5",
-    "date-fns": "^2.9.0",
+    "date-fns": "^2.14.0",
     "dotenv": "^8.2.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.4"
   },
   "dependencies": {
-    "core-js": "^3.6.1",
+    "core-js": "^3.6.5",
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0"
   }
