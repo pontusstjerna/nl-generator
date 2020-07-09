@@ -1,5 +1,4 @@
 import "core-js/features/array/flat-map";
-import { search } from "core-js/fn/symbol";
 
 // every word has k-1 previous words, even if they are undefined
 let k = 20;
