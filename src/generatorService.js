@@ -9,26 +9,25 @@ const setup = () => {
         return Promise.resolve();
     }
 
-    // TODO: Allow multiple input files?
-    const filePath = process.env.INPUT_FILE_PATH;
+    const filePaths = process.env.INPUT_FILE_PATH.split(';');
 
     return new Promise((resolve, reject) => {
-        const data = fs
+        const data = filePaths.map(filePath => fs
             .readFileSync(path.join(process.cwd(), filePath ? filePath : "."))
-            .toString("utf8");
+            .toString("utf8")).join('\n\n')
 
         const dimensions = process.env.DIMENSIONS || 50;
 
         // To easier find new entries
         const processedData = data.split("\n\n\n").map(part => {
-                let prePart = "";
-                for (let i = 0; i < dimensions - 1; i++) {
-                    prePart += "undefined ";
-                }
+            let prePart = "";
+            for (let i = 0; i < dimensions - 1; i++) {
+                prePart += "undefined ";
+            }
 
-                return prePart + part;
-            }).join("\n\n\n")
-                .replace(/"/g, "");
+            return prePart + part;
+        }).join("\n\n\n")
+            .replace(/"/g, "");
 
         learn(processedData, dimensions);
         resolve();

@@ -43,4 +43,4 @@ app.get("/", (req, res) => {
 //printText(50, "För kräftan krävs det mycket energi");
 //printText(100);
 
-app.listen(port, () => console.log(`API listening at ${port} and using file ${process.env.INPUT_FILE_PATH}`));
+app.listen(port, () => console.log(`API listening at ${port} and using files ${process.env.INPUT_FILE_PATH}`));

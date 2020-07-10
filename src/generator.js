@@ -2,6 +2,7 @@ import "core-js/features/array/flat-map";
 
 // every word has k-1 previous words, even if they are undefined
 let k = 20;
+let scoringMultiplier = 1
 const deterministic = false;
 let tree = [];
 
@@ -20,6 +21,9 @@ export const hasLearned = () => tree.length > 0;
 export const learn = (input, dimensions = 50) => {
     console.log("Model learning....");
     k = dimensions;
+    if (!isNaN(parseInt(process.env.SCORING_MULTIPLIER))) {
+        scoringMultiplier = parseInt(process.env.SCORING_MULTIPLIER)
+    }
     tree = input.split(" ").map(word => word.includes("undefined") ? undefined : word);
     console.log(`Model has learned! KD-tree has ${tree.length} entries and using ${k} dimensions.`);
 };
@@ -53,7 +57,7 @@ const getMatchLinear = (entry, searchIndex) => {
     for (let i = 0; i < entry.length - 1; i++) {
         const treeWord = tree[wordIndex - entry.length + i];
         if (entry[i] === treeWord) {
-            sum += (8 * i + 1);
+            sum += (scoringMultiplier * i + 1);
         }
     }
     return { index: wordIndex, score: sum };
@@ -75,7 +79,7 @@ const getMatchExponential = (entry, searchIndex) => {
     let sum = 0;
     for (let i = 0; i < entry.length - 1; i++) {
         if (entry[i] === tree[wordIndex - entry.length + i]) {
-            sum += (i * i);
+            sum += (i * i * scoringMultiplier);
         }
     }
     return { index: wordIndex, score: sum };
