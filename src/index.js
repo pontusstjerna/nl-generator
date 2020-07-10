@@ -10,7 +10,17 @@ const port = process.env.PORT ? process.env.PORT : 3000;
 const app = express();
 
 // Enable CORS support to allow calling on localhost 
-app.use(cors())
+app.use(cors());
+
+app.post('/slack', (req, res) => {
+    const wordCount = 50;
+    const initiator = req.body && req.body.text;
+    res.set('Content-Type', 'application/json');
+    generate(wordCount, initiator).then(result => res.send(JSON.stringify({
+        "response_type": "in_channel",
+        "text": result
+    })));
+});
 
 app.use(
     basicAuth({
@@ -33,4 +43,4 @@ app.get("/", (req, res) => {
 //printText(50, "För kräftan krävs det mycket energi");
 //printText(100);
 
-app.listen(port, () => console.log(`API listening at ${port} and using file ${process.env.INPUT_FILE_PATH}`));
+app.listen(port, () => console.log(`API listening at ${port} and using files ${process.env.INPUT_FILE_PATH}`));
